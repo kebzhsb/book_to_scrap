@@ -1,4 +1,11 @@
 import requests
-import bs4
+from bs4 import BeautifulSoup
 
-print("Salut les loulous")
+url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+
+reponse = requests.get(url)
+
+if reponse.ok :
+    soup = BeautifulSoup(reponse.text, "html.parser")
+    title = soup.find("title")
+    print(title)
