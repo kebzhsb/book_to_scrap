@@ -12,3 +12,5 @@ if reponse.ok :
     category = soup.select_one("ul.breadcrumb li:nth-of-type(3) a").get_text(strip=True)
    
     print(title , description , category)
+
+    print("ok hey")
