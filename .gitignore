@@ -31,3 +31,5 @@ build/
 .pytest_cache/
 .coverage
 htmlcov/
+
+book.csv
