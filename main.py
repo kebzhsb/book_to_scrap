@@ -14,8 +14,26 @@ if response.ok :
     title = soup.find("h1").get_text(strip=True)
     description = soup.select_one("#product_description + p").get_text(strip=True)
     category = soup.select_one("ul.breadcrumb li:nth-of-type(3) a").get_text(strip=True)
+    #Recuperer note
+    star_tag = soup.find('p', class_='star-rating')
+    rating_note = star_tag['class'][1]
+    word_to_number = {
+    'One': 1,
+    'Two': 2,
+    'Three': 3,
+    'Four': 4,
+    'Five': 5
+    }
+    rate = word_to_number.get(rating_note, 0)
+    #Recupe Url de l'image
+    images = soup.find_all("img")
+    for img in images:
+        src = img.get("src")
+        if src:
+            # Completer url de l'image
+            img_url = requests.compat.urljoin(url, src)
     
-
+    
     #Infos principales du tableau + créa du dico
     infos = {}
     for tr in soup.find_all("tr"):
@@ -26,14 +44,16 @@ if response.ok :
     infos["Title"] = title
     infos["Category"] = category
     infos["Description"] = description
-    # Crea Csv
-    with open("book.csv", "w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.DictWriter(f, fieldnames=infos.keys(), delimiter=';')
-        writer.writeheader()
-        writer.writerow(infos)
-    
+    infos["Rate"] = rate
+    infos["Image_url"] = img_url
+    infos[""] = 
 
-# Régler probleme des Â , sinon début ok manque url de la page et de l'image 
+    # Crea Csv
+    #with open("book.csv", "w", newline="", encoding="utf-8-sig") as f:
+    #    writer = csv.DictWriter(f, fieldnames=infos.keys(), delimiter=';')
+    #    writer.writeheader()
+    #    writer.writerow(infos)
+    
 
 
 
