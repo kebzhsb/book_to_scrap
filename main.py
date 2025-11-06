@@ -46,14 +46,14 @@ if response.ok :
     infos["Description"] = description
     infos["Rate"] = rate
     infos["Image_url"] = img_url
-    infos[""] = 
+    infos["page_url"] = url
 
     # Crea Csv
-    #with open("book.csv", "w", newline="", encoding="utf-8-sig") as f:
-    #    writer = csv.DictWriter(f, fieldnames=infos.keys(), delimiter=';')
-    #    writer.writeheader()
-    #    writer.writerow(infos)
-    
+    with open("book.csv", "w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=infos.keys(), delimiter=';')
+        writer.writeheader()
+        writer.writerow(infos)
+
 
 
 
