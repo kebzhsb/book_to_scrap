@@ -1,67 +1,38 @@
-import requests
-import csv
-from bs4 import BeautifulSoup
+from scrap import recuperer_infos_livre
+from scrap_category import recuperer_liens_livres,recuperer_toutes_categories
+from save_csv import enregistrer_donnees_csv
+from download_img import telecharger_image
+import os
 
-url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+# Programme principal
+if __name__ == "__main__":
+    base_url = "https://books.toscrape.com/"
+    print("On commence par récupérer toutes les catégories...\n")
 
-response = requests.get(url)
+    categories = recuperer_toutes_categories(base_url)
+    print(f"{len(categories)} catégories trouvées.\n")
 
-if response.ok :
-    response.encoding = "utf-8"
-    soup = BeautifulSoup(response.text, "html.parser")
-    
-    #Autres infos
-    title = soup.find("h1").get_text(strip=True)
-    description = soup.select_one("#product_description + p").get_text(strip=True)
-    category = soup.select_one("ul.breadcrumb li:nth-of-type(3) a").get_text(strip=True)
-    #Recuperer note
-    star_tag = soup.find('p', class_='star-rating')
-    rating_note = star_tag['class'][1]
-    word_to_number = {
-    'One': 1,
-    'Two': 2,
-    'Three': 3,
-    'Four': 4,
-    'Five': 5
-    }
-    rate = word_to_number.get(rating_note, 0)
-    #Recupe Url de l'image
-    images = soup.find_all("img")
-    for img in images:
-        src = img.get("src")
-        if src:
-            # Completer url de l'image
-            img_url = requests.compat.urljoin(url, src)
-    
-    
-    #Infos principales du tableau + créa du dico
-    infos = {}
-    for tr in soup.find_all("tr"):
-        th = tr.find("th").get_text(strip=True)
-        td = tr.find("td").get_text(strip=True)
-        infos[th] = td
-    # Ajout du reste au dico
-    infos["Title"] = title
-    infos["Category"] = category
-    infos["Description"] = description
-    infos["Rate"] = rate
-    infos["Image_url"] = img_url
-    infos["page_url"] = url
+    for nom_categorie, url_categorie in categories.items():
+        print(f"Catégorie en cours : {nom_categorie}")
+        liens_livres = recuperer_liens_livres(url_categorie)
+        print(f"   → {len(liens_livres)} livres détectés")
 
-    # Crea Csv
-    with open("book.csv", "w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.DictWriter(f, fieldnames=infos.keys(), delimiter=';')
-        writer.writeheader()
-        writer.writerow(infos)
+        livres_categorie = []
 
+        for url_livre in liens_livres:
+            print(f"   Récupération des infos pour : {url_livre}")
+            infos_livre = recuperer_infos_livre(url_livre)
+            if infos_livre:
+                livres_categorie.append(infos_livre)
+                telecharger_image(infos_livre["Image_url"], dossier=f"images/{nom_categorie}")
+            else:
+                print(f"   Impossible de récupérer ce livre : {url_livre}")
 
+        # Création du dossier CSV si nécessaire
+        os.makedirs("csv", exist_ok=True)
+        nom_fichier_csv = f"csv/{nom_categorie.replace(' ', '_').lower()}.csv"
+        enregistrer_donnees_csv(nom_fichier_csv, livres_categorie)
 
+        print(f"Catégorie '{nom_categorie}' terminée.\n")
 
-
-
-
-
-    
-    
-
-   
+    print("Scraping terminé pour toutes les catégories !")

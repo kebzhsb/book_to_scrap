@@ -32,4 +32,3 @@ build/
 .coverage
 htmlcov/
 
-book.csv
