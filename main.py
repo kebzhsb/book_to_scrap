@@ -9,7 +9,6 @@ if __name__ == "__main__":
     base_url = "https://books.toscrape.com/"
 
     categories = recuperer_toutes_categories(base_url)
-    print(f"{len(categories)} catégories trouvées.\n")
 
     for nom_categorie, url_categorie in categories.items():
         print(f"Catégorie en cours : {nom_categorie}")
@@ -33,4 +32,4 @@ if __name__ == "__main__":
 
         print(f"Catégorie '{nom_categorie}' terminée.\n")
 
-    print("Scraping terminé pour toutes les catégories !")
+    print("Scrap terminé")
