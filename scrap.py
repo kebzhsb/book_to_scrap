@@ -2,12 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 
 def recuperer_infos_livre(page_url):
-    """Récupère les informations d'un livre depuis sa page produit."""
+    """Récupèration des infos d'un livre."""
 
     try:
         reponse = requests.get(page_url)
     except requests.exceptions.RequestException as e:
-        print(f"Impossible de charger la page {page_url} :", e)
         return None
 
     if not reponse.ok:
@@ -17,7 +16,7 @@ def recuperer_infos_livre(page_url):
     reponse.encoding = "utf-8"
     page = BeautifulSoup(reponse.text, "html.parser")
 
-    # Titre du livre
+    # Titre
     titre_tag = page.find("h1")
     titre = titre_tag.text.strip() if titre_tag else "Titre inconnu"
 
@@ -39,14 +38,14 @@ def recuperer_infos_livre(page_url):
     img_tag = page.find("img")
     url_image = requests.compat.urljoin(page_url, img_tag["src"]) if img_tag else ""
 
-    # Tableau de détails
+    # Td, th 
     details_livre = {}
     for ligne in page.find_all("tr"):
         cle = ligne.find("th").text.strip()
         valeur = ligne.find("td").text.strip()
         details_livre[cle] = valeur
 
-    # Ajout des champs principaux
+    # Ajout des infos 
     details_livre["Title"] = titre
     details_livre["Category"] = categorie
     details_livre["Description"] = description
@@ -54,7 +53,7 @@ def recuperer_infos_livre(page_url):
     details_livre["Image_url"] = url_image
     details_livre["Page_url"] = page_url
 
-    # Petit message pour montrer que la page a été traitée
-    print(f"Infos récupérées pour : {titre}")
+    
+    print(f"Infos ok pour : {titre}")
 
     return details_livre

@@ -7,7 +7,6 @@ import os
 # Programme principal
 if __name__ == "__main__":
     base_url = "https://books.toscrape.com/"
-    print("On commence par récupérer toutes les catégories...\n")
 
     categories = recuperer_toutes_categories(base_url)
     print(f"{len(categories)} catégories trouvées.\n")
@@ -20,7 +19,6 @@ if __name__ == "__main__":
         livres_categorie = []
 
         for url_livre in liens_livres:
-            print(f"   Récupération des infos pour : {url_livre}")
             infos_livre = recuperer_infos_livre(url_livre)
             if infos_livre:
                 livres_categorie.append(infos_livre)
@@ -28,7 +26,7 @@ if __name__ == "__main__":
             else:
                 print(f"   Impossible de récupérer ce livre : {url_livre}")
 
-        # Création du dossier CSV si nécessaire
+        # CSV
         os.makedirs("csv", exist_ok=True)
         nom_fichier_csv = f"csv/{nom_categorie.replace(' ', '_').lower()}.csv"
         enregistrer_donnees_csv(nom_fichier_csv, livres_categorie)

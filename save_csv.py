@@ -1,10 +1,10 @@
 import csv
 
 def enregistrer_donnees_csv(nom_fichier, liste_dictionnaires):
-    """Enregistre une liste de dictionnaires dans un fichier CSV."""
+    """Enregistre les infos en CSV."""
 
     if not liste_dictionnaires:
-        print("Aucune donnée à sauvegarder. Le fichier CSV ne sera pas créé.")
+        print("Pas de donnees")
         return
 
     try:
@@ -15,6 +15,6 @@ def enregistrer_donnees_csv(nom_fichier, liste_dictionnaires):
             writer.writeheader()
             writer.writerows(liste_dictionnaires)
             
-        print(f"Données enregistrées avec succès dans {nom_fichier} !")
+        print(f"Données enregistrées {nom_fichier} !")
     except Exception as e:
-        print(f"Erreur lors de l'enregistrement du fichier {nom_fichier} :", e)
+        print("Erreur de telechargement")
