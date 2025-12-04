@@ -32,3 +32,6 @@ build/
 .coverage
 htmlcov/
 
+/csv/
+
+/images/
